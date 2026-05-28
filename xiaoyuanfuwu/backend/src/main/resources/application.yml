@@ -1,0 +1,64 @@
+# 服务器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Spring配置
+spring:
+  application:
+    name: campus-service
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/campus_service?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+# MyBatis Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.campus.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT配置
+jwt:
+  secret: campus-service-secret-key-2024-jwt-hmac-sha-256-secure
+  expiration: 86400000  # 24小时
+
+# DeepSeek AI配置
+kimi:
+  api-key: sk-3811cb9207db4b96a9ad9ae0dab25653
+  api-url: https://api.deepseek.com/chat/completions
+  model: deepseek-v4-flash
+
+# 讯飞语音配置
+xfy:
+  app-id: dd4eeb66
+  api-secret: OWVmMzMzNDJiODg2MTUyNmE5NDcxNzZi
+  api-key: 2d7b56c7c72b17f83c6b39236d16822a
+  iat-url: wss://iat-api.xfyun.cn/v2/iat
+  tts-url: wss://tts-api.xfyun.cn/v2/tts
+
+# 日志配置
+logging:
+  level:
+    com.campus: debug
+    com.campus.mapper: debug
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'
