@@ -1,0 +1,1 @@
+import{r as e}from"./request-DNUoovCJ.js";const r=t=>e({url:"/activity/list",method:"get",params:t}),c=()=>e({url:"/activity/recommend",method:"get"}),o=t=>e({url:`/activity/detail/${t}`,method:"get"});export{r as a,o as b,c as g};
