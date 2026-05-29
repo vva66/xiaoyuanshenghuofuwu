@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: campus-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-123456}
+      MYSQL_DATABASE: campus_service
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./campus_service_test_data.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - campus-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campus-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 数据库配置
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/campus_service?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-123456}
+      # JWT 配置
+      JWT_SECRET: ${JWT_SECRET:-campus-service-secret-key-2024}
+      # AI 配置
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      KIMI_API_URL: ${KIMI_API_URL:-https://api.deepseek.com/chat/completions}
+      KIMI_MODEL: ${KIMI_MODEL:-deepseek-v4-flash}
+      # 讯飞语音配置
+      XFY_APP_ID: ${XFY_APP_ID:-}
+      XFY_API_SECRET: ${XFY_API_SECRET:-}
+      XFY_API_KEY: ${XFY_API_KEY:-}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - campus-network
+
+volumes:
+  mysql_data:
+
+networks:
+  campus-network:
+    driver: bridge

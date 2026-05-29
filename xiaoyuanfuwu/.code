@@ -1,0 +1,70 @@
+{
+  "name": "campus-service",
+  "version": "1.0.0",
+  "description": "校园服务系统 - 前后端分离项目",
+  "type": "fullstack",
+  "language": "java",
+  "framework": "spring-boot",
+  "services": [
+    {
+      "name": "backend",
+      "type": "java",
+      "root": "backend",
+      "build": {
+        "command": "mvn clean package -DskipTests",
+        "output": "target/campus-service-1.0.0.jar"
+      },
+      "start": {
+        "command": "java -jar target/campus-service-1.0.0.jar",
+        "port": 8080
+      },
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "prod",
+        "SERVER_PORT": "8080",
+        "SERVER_SERVLET_CONTEXT_PATH": "/api"
+      },
+      "healthCheck": {
+        "path": "/api/actuator/health",
+        "port": 8080
+      }
+    },
+    {
+      "name": "frontend",
+      "type": "node",
+      "root": "frontend",
+      "build": {
+        "command": "npm install && npm run build",
+        "output": "dist"
+      },
+      "start": {
+        "command": "npx vite preview --port 3000",
+        "port": 3000
+      },
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:8080",
+      "changeOrigin": true
+    }
+  },
+  "env": {
+    "required": [
+      "DB_HOST",
+      "DB_PORT",
+      "DB_NAME",
+      "DB_USERNAME",
+      "DB_PASSWORD",
+      "KIMI_API_KEY"
+    ],
+    "optional": [
+      "XFY_APP_ID",
+      "XFY_API_SECRET",
+      "XFY_API_KEY",
+      "JWT_SECRET"
+    ]
+  }
+}

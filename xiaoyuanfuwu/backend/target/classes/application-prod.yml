@@ -1,0 +1,70 @@
+# =============================================
+# 生产环境配置 - 用于扣子平台部署
+# 所有敏感信息通过环境变量注入
+# =============================================
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: campus-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/campus_service?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.campus.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+jwt:
+  secret: ${JWT_SECRET:campus-service-secret-key-2024}
+  expiration: 86400000
+
+kimi:
+  api-key: ${KIMI_API_KEY:}
+  api-url: ${KIMI_API_URL:https://api.deepseek.com/chat/completions}
+  model: ${KIMI_MODEL:deepseek-v4-flash}
+
+xfy:
+  app-id: ${XFY_APP_ID:}
+  api-secret: ${XFY_API_SECRET:}
+  api-key: ${XFY_API_KEY:}
+  iat-url: wss://iat-api.xfyun.cn/v2/iat
+  tts-url: wss://tts-api.xfyun.cn/v2/tts
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.campus: info
+    com.campus.mapper: warn
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n'

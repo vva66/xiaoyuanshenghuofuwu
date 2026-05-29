@@ -1,1 +1,0 @@
-import{r as e}from"./request-DNUoovCJ.js";const t=r=>e({url:"/user/login",method:"post",data:r}),o=r=>e({url:"/user/register",method:"post",data:r}),u=r=>e({url:`/user/info/${r}`,method:"get"}),n=r=>e({url:"/user/update",method:"put",data:r}),a=r=>e({url:"/user/changePassword",method:"post",data:r});export{a as c,u as g,t as l,o as r,n as u};

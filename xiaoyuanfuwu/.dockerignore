@@ -1,0 +1,14 @@
+.idea/
+.vscode/
+.git/
+.gitignore
+
+frontend/node_modules/
+frontend/dist/
+
+backend/target/
+backend/src/test/
+
+*.md
+start.bat
+update_all.sql

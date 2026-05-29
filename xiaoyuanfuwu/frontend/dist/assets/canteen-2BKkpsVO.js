@@ -1,1 +1,0 @@
-import{r as t}from"./request-DNUoovCJ.js";const r=e=>t({url:"/canteen/list",method:"get",params:e}),s=e=>t({url:`/canteen/detail/${e}`,method:"get"}),a=e=>t({url:`/canteen/dishes/${e}`,method:"get"});export{s as a,a as b,r as g};
